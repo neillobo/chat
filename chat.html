@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chatbuilder</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  </head>
+  <body>
+
+    <script>     
+
+
+      $(document).ready(function(){
+
+var userName = prompt("What is your name?")
+		
+
+	window.setInterval(function(){
+								
+				
+				$.ajax({
+				    url : 'https://api.parse.com/1/classes/chats?order=createdAt',
+				    type : 'GET',
+				    dataType: 'JSON',
+				    contentType : 'application/json',
+				    headers : {
+				        'X-Parse-Application-Id' : 'voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r',
+				        'X-Parse-REST-API-Key' : 'QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf'
+				    },
+						    	
+				    error : function(data) {
+				        alert('error');
+				    },
+				    success : function(retAns) {
+								
+								$('.messages').children().remove();
+								for(var i in retAns.results){
+								$('.messages').append("<li>"+ retAns.results[i].text +" </li>");
+								}													
+										
+				    }	
+				});
+
+				},3000);
+
+										
+			$('.send').click(function()
+					{
+					var msgText=userName+": "+document.getElementById("draft").value;
+					$('#draft').val("");
+					sendChat(msgText);						
+					}
+			 );
+
+function sendChat(postText){
+
+
+	$.ajax({
+	    url : 'https://api.parse.com/1/classes/chats',
+	    type : 'POST',
+	    dataType: 'JSON',
+	    contentType : 'application/json',
+	    
+		headers : {
+	        'X-Parse-Application-Id' : 'voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r',
+	        'X-Parse-REST-API-Key' : 'QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf'
+	    },
+		
+		data : JSON.stringify({   
+	           text : postText
+	            
+	       }),	    	
+			
+	    error : function(data) {
+	        alert('error');
+	    },
+	    success : function(retAns) {
+					console.log('Successful Post');
+					}													
+							
+	    }	
+	);
+
+}
+
+
+})
+</script>
+
+    <h2>Borken Chat</h2>
+
+    <input id="draft" type="text"/> <button class="send" enabled>Send</button>
+
+    <ul class="messages">
+      
+      
+    </ul>
+
+  </body>
+</html>
